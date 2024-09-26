@@ -37,9 +37,11 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < rowsA * colsA; ++i) {
         h_A[i] = (float)i+1;
     }
-    
     for (int i = 0; i < rowsB * colsB; ++i) {
         h_B[i] = (float)i+1;
+    }
+    for (int i = 0; i < rowsA * colsB; ++i) {
+        h_C[i] = 0.0f;
     }
 
     // Allocate device memory
