@@ -56,7 +56,7 @@ sketchx@sketchx2:~$ docker attach fc4d3d9c5810
 root@fc4d3d9c5810:~# 
 root@fc4d3d9c5810:~# cd /workspace
 root@fc4d3d9c5810:~# git clone https://github.com/pinakinathc/learn_cuda.git
-root@fc4d3d9c5810:~# cd /workspace/lear_cuda
+root@fc4d3d9c5810:~# cd /workspace/learn_cuda
 ```
 
 ### How to build: 
