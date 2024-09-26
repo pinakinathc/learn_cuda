@@ -8,7 +8,60 @@ Few stuff:
 
 Thanks to @karpathy and ChatGPT team.
 
-How to build: `make <target>`
+### Environment Setup via Docker:
+
+How to run Docker guide (written by me, you can also find other good sources): [https://www.pinakinathc.me/containers-tutorial/](https://www.pinakinathc.me/containers-tutorial/)
+
+Make sure that NVIDIA Docker runtime is properly installed and configured on your machine since we will use `--gpus all` flag. This requires the `nvidia-container-toolkit` to be installed.
+
+```
+docker pull nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+sketchx@sketchx2:~$ docker image ls
+REPOSITORY         TAG                               IMAGE ID       CREATED         SIZE
+extension-script   latest                            4006e7a901a1   4 months ago    4.45GB
+nvidia/cuda        12.4.1-cudnn-devel-ubuntu22.04    edd3b6bf59a6   5 months ago    8.29GB
+nvidia/cuda        11.7.1-cudnn8-devel-ubuntu22.04   1256fa5b1b7d   10 months ago   7.69GB
+nvidia/cuda        11.8.0-cudnn8-devel-ubuntu22.04   d0117ee15b5f   10 months ago   9.74GB
+ubuntu             xenial                            b6f507652425   3 years ago     135MB
+sketchx@sketchx2:~$ 
+
+sketchx@sketchx2:~$ export IMAGE_ID=edd3b6bf59a6
+sketchx@sketchx2:~$ export PATH_TO_CODEBASE=$PWD
+sketchx@sketchx2:~$ export CONTAINER_NAME=test_docker
+
+sketchx@sketchx2:~$ docker run -it -v $PATH_TO_CODEBASE:/workspace --gpus all --name test_docker $IMAGE_ID
+root@fc4d3d9c5810:~#
+root@fc4d3d9c5810:~# exit
+sketchx@sketchx2:~$ 
+```
+
+Restart container
+
+```
+sketchx@sketchx2:~$ docker container ls -a
+CONTAINER ID   IMAGE                                        COMMAND                  CREATED        STATUS                     PORTS     NAMES
+fc4d3d9c5810   nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04   "/opt/nvidia/nvidia_…"   2 months ago   Exited (0) 3 months ago              test_docker
+852f155a2386   1256fa5b1b7d                                 "/opt/nvidia/nvidia_…"   3 months ago   Exited (255) 6 weeks ago             pinaki
+6baf694fedd9   1256fa5b1b7d                                 "/opt/nvidia/nvidia_…"   3 months ago   Up 4 weeks                           frosty_turing
+c90273dd8359   1256fa5b1b7d                                 "/opt/nvidia/nvidia_…"   3 months ago   Exited (0) 3 months ago              reverent_wright
+sketchx@sketchx2:~$ 
+
+sketchx@sketchx2:~$ docker start fc4d3d9c5810
+sketchx@sketchx2:~$ docker container ls
+CONTAINER ID   IMAGE                                        COMMAND                  CREATED        STATUS        PORTS     NAMES
+fc4d3d9c5810   nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04   "/opt/nvidia/nvidia_…"   2 months ago   Up 32 hours             test_docker
+6baf694fedd9   1256fa5b1b7d                                 "/opt/nvidia/nvidia_…"   3 months ago   Up 4 weeks              frosty_turing
+
+sketchx@sketchx2:~$ docker attach fc4d3d9c5810
+root@fc4d3d9c5810:~# 
+root@fc4d3d9c5810:~# cd /workspace
+root@fc4d3d9c5810:~# git clone https://github.com/pinakinathc/learn_cuda.git
+root@fc4d3d9c5810:~# cd /workspace/lear_cuda
+```
+
+### How to build: 
+
+`make <target>`
 
 Example:
 
