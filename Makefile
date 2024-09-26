@@ -36,5 +36,8 @@ matrix_mul_stack: matrix_mul_stack.cu | $(BUILD_DIR)
 matrix_mul_heap: matrix_mul_heap.cu | $(BUILD_DIR)
 	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
 
+matrix_mul_multiThread: matrix_mul_multiThread.cu | $(BUILD_DIR)
+	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
+
 clean:
 	rm -rf $(BUILD_DIR)
