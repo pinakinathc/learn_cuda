@@ -89,3 +89,34 @@ Matrix C:
 49.0000         64.0000 
 root@fc4d3d9c5810:/workspace/learn_cuda# 
 ```
+
+### Git Submodules
+
+We also add a few third-party dependency projects (e.g., tiny-cuda-nn). Check `.gitmodules` for more information.
+
+```
+git submodule update --init --recursive
+```
+
+Example:
+
+For tiny-cuda-nn do the following:
+
+```
+root@fc4d3d9c5810:/workspace/learn_cuda# git submodule add https://github.com/NVlabs/tiny-cuda-nn.git dependencies/tiny-cuda-nn
+Cloning into '/workspace/learn_cuda/dependencies/tiny-cuda-nn'...
+remote: Enumerating objects: 4098, done.
+remote: Counting objects: 100% (1304/1304), done.
+remote: Compressing objects: 100% (207/207), done.
+remote: Total 4098 (delta 1121), reused 1153 (delta 1076), pack-reused 2794 (from 1)
+Receiving objects: 100% (4098/4098), 19.61 MiB | 45.63 MiB/s, done.
+Resolving deltas: 100% (2630/2630), done.
+root@fc4d3d9c5810:/workspace/learn_cuda# git submodule update --init --recursive
+Submodule 'dependencies/cutlass' (https://github.com/NVIDIA/cutlass) registered for path 'dependencies/tiny-cuda-nn/dependencies/cutlass'
+Submodule 'dependencies/fmt' (https://github.com/fmtlib/fmt) registered for path 'dependencies/tiny-cuda-nn/dependencies/fmt'
+Cloning into '/workspace/learn_cuda/dependencies/tiny-cuda-nn/dependencies/cutlass'...
+Cloning into '/workspace/learn_cuda/dependencies/tiny-cuda-nn/dependencies/fmt'...
+Submodule path 'dependencies/tiny-cuda-nn/dependencies/cutlass': checked out '1eb6355182a5124639ce9d3ff165732a94ed9a70'
+Submodule path 'dependencies/tiny-cuda-nn/dependencies/fmt': checked out 'b0c8263cb26ea178d3a5df1b984e1a61ef578950'
+root@fc4d3d9c5810:/workspace/learn_cuda# 
+```
