@@ -1,4 +1,4 @@
-This repo is for me to learn C/C++/CUDA/cuBLAS
+This repo is for me to learn C/C++/NVCC/CUDA/cuBLAS
 
 Few stuff:
 
@@ -15,7 +15,7 @@ How to run Docker guide (written by me, you can also find other good sources): [
 Make sure that NVIDIA Docker runtime is properly installed and configured on your machine since we will use `--gpus all` flag. This requires the `nvidia-container-toolkit` to be installed.
 
 ```
-docker pull nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+sketchx@sketchx2:~$ docker pull nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 sketchx@sketchx2:~$ docker image ls
 REPOSITORY         TAG                               IMAGE ID       CREATED         SIZE
 extension-script   latest                            4006e7a901a1   4 months ago    4.45GB
@@ -111,6 +111,7 @@ remote: Compressing objects: 100% (207/207), done.
 remote: Total 4098 (delta 1121), reused 1153 (delta 1076), pack-reused 2794 (from 1)
 Receiving objects: 100% (4098/4098), 19.61 MiB | 45.63 MiB/s, done.
 Resolving deltas: 100% (2630/2630), done.
+
 root@fc4d3d9c5810:/workspace/learn_cuda# git submodule update --init --recursive
 Submodule 'dependencies/cutlass' (https://github.com/NVIDIA/cutlass) registered for path 'dependencies/tiny-cuda-nn/dependencies/cutlass'
 Submodule 'dependencies/fmt' (https://github.com/fmtlib/fmt) registered for path 'dependencies/tiny-cuda-nn/dependencies/fmt'
@@ -119,4 +120,43 @@ Cloning into '/workspace/learn_cuda/dependencies/tiny-cuda-nn/dependencies/fmt'.
 Submodule path 'dependencies/tiny-cuda-nn/dependencies/cutlass': checked out '1eb6355182a5124639ce9d3ff165732a94ed9a70'
 Submodule path 'dependencies/tiny-cuda-nn/dependencies/fmt': checked out 'b0c8263cb26ea178d3a5df1b984e1a61ef578950'
 root@fc4d3d9c5810:/workspace/learn_cuda# 
+```
+
+We manually build by going inside each submodule. We do not want to overcomplicate Makefile or use CMake.
+
+```
+root@fc4d3d9c5810:/workspace/learn_cuda# cd dependencies/tiny-cuda-nn/
+root@fc4d3d9c5810:/workspace/learn_cuda/dependencies/tiny-cuda-nn# cmake . -B build -DCMAKE_BUILD_TYPE=Debug
+-- The CXX compiler identification is GNU 11.4.0
+-- The CUDA compiler identification is NVIDIA 12.4.131
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /usr/local/cuda/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Obtained CUDA architectures automatically from installed GPUs
+-- Targeting CUDA architectures: 75
+-- Module support is disabled.
+-- Version: 9.1.1
+-- Build type: Debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /workspace/learn_cuda/dependencies/tiny-cuda-nn/build
+root@fc4d3d9c5810:/workspace/learn_cuda/dependencies/tiny-cuda-nn# 
+
+root@fc4d3d9c5810:/workspace/learn_cuda/dependencies/tiny-cuda-nn# cmake --build build -j
+[  5%] Building CXX object dependencies/fmt/CMakeFiles/fmt.dir/src/format.cc.o
+[ 10%] Building CXX object dependencies/fmt/CMakeFiles/fmt.dir/src/os.cc.o
+[ 15%] Linking CXX static library libfmtd.a
+[ 15%] Built target fmt
+[ 20%] Building CUDA object CMakeFiles/tiny-cuda-nn.dir/src/cpp_api.cu.o
+[ 25%] Building CUDA object CMakeFiles/tiny-cuda-nn.dir/src/loss.cu.o
+
+...
+
 ```

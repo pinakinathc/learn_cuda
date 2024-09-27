@@ -9,6 +9,10 @@ USE_CUDNN ?= 0
 BUILD_DIR = build
 $(shell mkdir -p $(BUILD_DIR))
 
+# Adding Git Submodules
+USE_TINY_CUDA_NN ?= 1
+TINY_CUDA_NN_DIRS = dependencies/tiny-cuda-nn
+
 # Get your GPU's compute capability
 GPU_COMPUTE_CAPABILITY = $(shell nvidia-smi --query-gpu=compute_cap --format=csv,noheader | sed 's/\.//g' | sort -n | head -n 1)
 GPU_COMPUTE_CAPABILITY := $(strip $(GPU_COMPUTE_CAPABILITY))
@@ -30,6 +34,14 @@ ifeq ($(USE_CUDNN), 1)
     NVCC_LDLIBS += -lcudnn
 endif
 
+ifeq ($(USE_TINY_CUDA_NN), 1)
+    NVCC_INCLUDES += -I$(TINY_CUDA_NN_DIRS)/include -I$(TINY_CUDA_NN_DIRS)/dependencies 
+    NVCC_INCLUDES += -I$(TINY_CUDA_NN_DIRS)/dependencies/cutlass/include 
+    NVCC_INCLUDES += -I$(TINY_CUDA_NN_DIRS)/dependencies/cutlass/tools/util/include 
+    NVCC_INCLUDES += -I$(TINY_CUDA_NN_DIRS)/dependencies/fmt/include
+    NVCC_FLAGS += -DTCNN_MIN_GPU_ARCH=$(GPU_COMPUTE_CAPABILITY) --extended-lambda --expt-relaxed-constexpr
+endif
+
 matrix_mul_stack: matrix_mul_stack.cu | $(BUILD_DIR)
 	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
 
@@ -37,6 +49,9 @@ matrix_mul_heap: matrix_mul_heap.cu | $(BUILD_DIR)
 	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
 
 matrix_mul_multiThread: matrix_mul_multiThread.cu | $(BUILD_DIR)
+	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
+
+img_hashgrid_tcnn: img_hashgrid_tcnn.cu | $(BUILD_DIR)
 	$(NVCC) $(NVCC_FLAGS) $^ $(NVCC_LDFLAGS) $(NVCC_INCLUDES) $(NVCC_LDLIBS) -o $(BUILD_DIR)/$@
 
 clean:
